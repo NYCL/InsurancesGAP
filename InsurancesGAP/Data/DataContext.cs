@@ -1,4 +1,5 @@
-﻿using InsurancesGAP.Models;
+﻿using InsurancesGAP.Data.Interfaces;
+using InsurancesGAP.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,20 @@ namespace InsurancesGAP.Data
 {
     public class DataContext : DbContext
     {
-        public EFRepository<Customer> Customer { get; set; }
-        public EFRepository<CoverageType> CoverageTypes { get; set; }
-        public EFRepository<RiskType> RiskTypes { get; set; }
-        public EFRepository<Policy> Policies { get; set; }
+        private EFRepository<Customer> _customer { get; set; }
+        private EFRepository<CoverageType> _coverageTypes { get; set; }
+        private EFRepository<RiskType> _riskTypes { get; set; }
+        private EFRepository<Policy> _policies { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
 
         }
+
+        public EFRepository<Customer> Customers => _customer ?? (_customer = new EFRepository<Customer>(this));
+        public EFRepository<CoverageType> CoverageTypes => _coverageTypes ?? (_coverageTypes = new EFRepository<CoverageType>(this));
+        public EFRepository<RiskType> RiskTypes => _riskTypes ?? (_riskTypes = new EFRepository<RiskType>(this));
+        public EFRepository<Policy> Policies => _policies ?? (_policies = new EFRepository<Policy>(this));
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
