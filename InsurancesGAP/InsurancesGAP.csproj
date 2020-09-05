@@ -12,4 +12,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+    <Folder Include="Controllers\" />
+    <Folder Include="Models\ViewModels\" />
+    <Folder Include="Views\" />
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
 </Project>
