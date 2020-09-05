@@ -32,5 +32,14 @@ namespace InsurancesGAP.Models
         public long? CustomerId { get; set; }
 
         public virtual Customer Customer { get; set; }
+
+        public bool Validate()
+        {
+            if (RiskTypeId == 4L && CoveragePercentage > 50.0)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
