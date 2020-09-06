@@ -22,6 +22,7 @@ namespace InsurancesGAP.Controllers
             var model = new PolicyViewModel();
             model.RiskTypes = _context.RiskTypes.Get().ToList();
             model.CoverageTypes = _context.CoverageTypes.Get().ToList();
+            model.Customers = _context.Customers.Get().ToList();
             return View(model);
         }
     }

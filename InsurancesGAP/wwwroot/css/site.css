@@ -1,1 +1,3 @@
-﻿
+﻿#policies-table tbody tr td:not(:last-child) {
+    cursor: copy;
+}

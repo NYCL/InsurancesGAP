@@ -5,7 +5,7 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-10">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header">
                 <ul id="myTab" class="nav nav-tabs card-header-tabs">
@@ -28,6 +28,9 @@
                         </form>
                     </div>
                     <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                        <button type="button" id="actions" class="btn btn-info mb-3" data-toggle="modal" data-target="#asignModal" disabled>
+                            Asignar o Cancelar Pólizas
+                        </button>
                         <div class="table-responsive-sm">
                             <table id="policies-table" class="table table-sm">
                                 <thead class="thead-dark">
@@ -37,6 +40,7 @@
                                         <th scope="col">@Html.DisplayNameFor(model => model.Policy.CoveragePercentage)</th>
                                         <th scope="col">@Html.DisplayNameFor(model => model.Policy.CoverageMonths)</th>
                                         <th scope="col">@Html.DisplayNameFor(model => model.Policy.RiskType)</th>
+                                        <th scope="col">@Html.DisplayNameFor(model => model.Policy.Customer)</th>
                                         <th scope="col"></th>
                                     </tr>
                                 </thead>
@@ -95,6 +99,33 @@
                     <button type="submit" class="btn btn-danger">Eliminar</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="asignModal" tabindex="-1" aria-labelledby="asignModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="asignModalLabel">Asignar o Cancelar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <p class="m-0">Cancelar las <span class="selections"></span> Póliza(s) Seleccionadas. </p>
+                        <button type="button" id="cancel" class="btn btn-warning">Cancelar Póliza(s)</button>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <p class="m-0">Asignar las <span class="selections"></span> Póliza(s) a Cliente a: </p>
+                        <select id="Customers" name="Customers" class="custom-select mb-2" asp-items="@(new SelectList(Model.Customers, "ID", "Name"))" required>
+                            <option value="">-- Seleccionar --</option>
+                        </select>
+                        <button type="button" id="assign" class="btn btn-primary" disabled>Asignar</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

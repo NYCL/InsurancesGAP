@@ -104,6 +104,36 @@ namespace InsurancesGAP.Api
             return policy;
         }
 
+        [HttpPatch("{id}/{customerId?}")]
+        public ActionResult<bool> PatchPolicy(long id, long? customerId)
+        {
+            var policy = _context.Policies.Get(id);
+            if (policy == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                policy.CustomerId = customerId;
+                _context.Policies.Update(policy);
+                _context.Policies.Save();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PolicyExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return true;
+        }
+
         private bool PolicyExists(long id)
         {
             return _context.Policies.Get().Any(e => e.ID == id);

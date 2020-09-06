@@ -9,6 +9,7 @@ namespace InsurancesGAP.Models.ViewModels
     {
         public List<RiskType> RiskTypes { get; set; }
         public List<CoverageType> CoverageTypes { get; set; }
+        public List<Customer> Customers { get; set; }
         public Policy Policy { get; set; }
 
         public PolicyViewModel()

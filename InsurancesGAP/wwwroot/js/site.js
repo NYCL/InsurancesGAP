@@ -76,7 +76,6 @@
         $this.find('[type=submit]').text(text).prop('disabled', false);
     });
 
-
     // Submit via ajax using api (Delete)
     $('.delete-form').submit(function (e) {
         var $this = $(this);
@@ -140,12 +139,13 @@
                 var table = $('#policies-table').find('tbody');
                 table.empty();
                 for (var i = 0; i < response.length; i++) {
-                    var row = $('<tr>');
+                    var row = $('<tr data-id="' + response[i].id + '">');
                     row.append('<td>' + response[i].name + '</td>');
                     row.append('<td>' + response[i].policyCoverageTypes.map(item => item.coverageType.name) + '</td>');
                     row.append('<td>' + response[i].coveragePercentage + '%</td>');
                     row.append('<td>' + response[i].coverageMonths + '</td>');
                     row.append('<td>' + response[i].riskType.name + '</td>');
+                    row.append('<td>' + (response[i].customer ? response[i].customer.name : '-') + '</td>');
                     row.append('<td>' +
                         '<button type="button" asp-action="Edit" data-id="' + response[i].id + '" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#editModal">Editar</button>&nbsp;' +
                         '<button type="button" asp-action="Delete" data-id="' + response[i].id + '" class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#deleteModal">Eliminar</button>' +
@@ -165,8 +165,60 @@
                 console.log(textStatus)
             }).always(function () {
                 jqxhr = null;
+                $('#actions').prop('disabled', true);
             });
         }
+    });
+
+    $('#policies-table tbody').on('click', 'tr', function () {
+        $(this).toggleClass('table-active');
+        var selected = $('#policies-table tbody').find('.table-active').length;
+        if (selected > 0) {
+            $('#actions').prop('disabled', false);
+        } else {
+            $('#actions').prop('disabled', true);
+        }
+    });
+
+    $('#asignModal').on('show.bs.modal', function () {
+        var selected = $('#policies-table tbody').find('.table-active').length;
+        $('.selections').text(selected);
+    });
+
+    $('#Customers').change(function () {
+        if ($(this).val()) {
+            $('#assign').prop('disabled', false);
+        } else {
+            $('#assign').prop('disabled', true);
+        }
+    });
+
+    $('#cancel').click(function () {
+        $('#policies-table tbody').find('.table-active').each(function () {
+            $.ajax({
+                url: '/api/Policies/' + $(this).data('id') + '/',
+                method: 'PATCH',
+                contentType: "application/json",
+                cache: false
+            }).done(function (response) {
+                $('#list-tab').trigger('shown.bs.tab');
+                $('#asignModal').modal('hide');
+            });
+        });
+    });
+
+    $('#assign').click(function () {
+        $('#policies-table tbody').find('.table-active').each(function () {
+            $.ajax({
+                url: '/api/Policies/' + $(this).data('id') + '/' + $('#Customers').val(),
+                method: 'PATCH',
+                contentType: "application/json",
+                cache: false
+            }).done(function (response) {
+                $('#list-tab').trigger('shown.bs.tab');
+                $('#asignModal').modal('hide');
+            });
+        });
     });
 
     $('#editModal').on('show.bs.modal', function (event) {
