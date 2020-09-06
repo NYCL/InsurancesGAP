@@ -25,20 +25,20 @@ namespace InsurancesGAP.Api
         [HttpGet]
         public ActionResult<IEnumerable<Policy>> GetPolicy()
         {
-            return _context.Policies.Get().ToList();
+            return _context.Policies.Get(includeProperties : new string[] { "Customer", "RiskType", "PolicyCoverageTypes.CoverageType" }).ToList();
         }
 
         [HttpGet("{id}")]
         public ActionResult<Policy> GetPolicy(long id)
         {
-            var policy = _context.Policies.Get(id);
+            var policy = _context.Policies.Get(p=> p.ID == id, null, new string[] { "PolicyCoverageTypes" });
 
             if (policy == null)
             {
                 return NotFound();
             }
 
-            return policy;
+            return policy.First();
         }
 
         [HttpPost]
@@ -56,7 +56,7 @@ namespace InsurancesGAP.Api
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutPolicy(long id, Policy policy)
+        public ActionResult<Policy> PutPolicy(long id, Policy policy)
         {
             if (id != policy.ID)
             {
@@ -69,10 +69,9 @@ namespace InsurancesGAP.Api
                 return BadRequest(ModelState);
             }
 
-            _context.Policies.Update(policy);
-
             try
             {
+                _context.Policies.Update(policy);
                 _context.Policies.Save();
             }
             catch (DbUpdateConcurrencyException)
@@ -87,7 +86,7 @@ namespace InsurancesGAP.Api
                 }
             }
 
-            return NoContent();
+            return policy;
         }
 
         [HttpDelete("{id}")]

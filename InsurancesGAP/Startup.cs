@@ -29,7 +29,10 @@ namespace InsurancesGAP
                     Configuration.GetConnectionString("DefaultConnection")
                 )
             );
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson(options => {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.MaxDepth = 3;
+                });
             services.AddRazorPages();
         }
 
@@ -47,10 +50,6 @@ namespace InsurancesGAP
             {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
-                endpoints.MapGet("/test", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
             });
         }
     }

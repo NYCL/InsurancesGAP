@@ -1,0 +1,64 @@
+﻿@model PolicyViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input type="hidden" asp-for="Policy.ID" />
+<div class="form-row">
+    <div class="form-group col-sm-6">
+        <label asp-for="Policy.Name" class="control-label"></label>
+        <input asp-for="Policy.Name" class="form-control" required />
+        <span asp-validation-for="Policy.Name" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col">
+        <label asp-for="Policy.Description" class="control-label"></label>
+        <textarea asp-for="Policy.Description" class="form-control"></textarea>
+        <span asp-validation-for="Policy.Description" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="col-sm-6">
+        <div class="form-row">
+            <label asp-for="Policy.PolicyCoverageTypes" class="control-label col-sm-5"></label>
+            <div class="col-sm-7">
+                <select asp-for="Policy.PolicyCoverageTypes" class="form-control overflow-hidden" asp-items="@(new SelectList(Model.CoverageTypes, "ID", "Name"))" required>
+                </select>
+                <span asp-validation-for="Policy.PolicyCoverageTypes" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group col-sm-6">
+        <label asp-for="Policy.CoveragePercentage"></label>
+        <input type="range" class="form-control-range" asp-for="Policy.CoveragePercentage" step="0.1" required>
+        <small class="form-text text-center text-muted CoveragePercentage">
+            0%
+        </small>
+        <span asp-validation-for="Policy.CoveragePercentage" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-sm-6">
+        <label asp-for="Policy.StartDate" class="control-label"></label>
+        <input asp-for="Policy.StartDate" class="form-control" required />
+        <span asp-validation-for="Policy.StartDate" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-6">
+        <label asp-for="Policy.CoverageMonths" class="control-label"></label>
+        <input asp-for="Policy.CoverageMonths" class="form-control" min="1.0" required />
+        <span asp-validation-for="Policy.CoverageMonths" class="text-danger"></span>
+    </div>
+</div>
+<div class="form-row">
+    <div class="form-group col-sm-6">
+        <label asp-for="Policy.Price" class="control-label"></label>
+        <input asp-for="Policy.Price" class="form-control" min="1" required />
+        <span asp-validation-for="Policy.Price" class="text-danger"></span>
+    </div>
+    <div class="form-group col-sm-6">
+        <label asp-for="Policy.RiskType" class="control-label"></label>
+        <select asp-for="Policy.RiskTypeId" class="custom-select" asp-items="@(new SelectList(Model.RiskTypes, "ID", "Name"))" required>
+            <option value="">-- Seleccionar --</option>
+        </select>
+        <span asp-validation-for="Policy.RiskTypeId" class="text-danger"></span>
+    </div>
+</div>

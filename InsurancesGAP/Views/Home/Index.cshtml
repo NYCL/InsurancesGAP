@@ -7,76 +7,94 @@
 <div class="row justify-content-center">
     <div class="col-md-10">
         <div class="card">
-            <h5 class="card-header">Crear Póliza de Seguro</h5>
+            <div class="card-header">
+                <ul id="myTab" class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Crear Póliza de Seguro</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a class="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">Listado de Pólizas de Seguro</a>
+                    </li>
+                </ul>
+            </div>
             <div class="card-body">
-                <form class="policy-validation" asp-controller="Policies" asp-action="PostPolicy" data-response="#response" novalidate>
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-row">
-                        <div class="form-group col-sm-6">
-                            <label asp-for="Policy.Name" class="control-label"></label>
-                            <input asp-for="Policy.Name" class="form-control" required />
-                            <span asp-validation-for="Policy.Name" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col">
-                            <label asp-for="Policy.Description" class="control-label"></label>
-                            <textarea asp-for="Policy.Description" class="form-control"></textarea>
-                            <span asp-validation-for="Policy.Description" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="col-sm-6">
-                            <div class="form-row">
-                                <label asp-for="Policy.PolicyCoverageTypes" class="control-label col-sm-5"></label>
-                                <div class="col-sm-7">
-                                    <select asp-for="Policy.PolicyCoverageTypes" class="form-control overflow-hidden" asp-items="@(new SelectList(Model.CoverageTypes, "ID", "Name"))" required>
-                                    </select>
-                                    <span asp-validation-for="Policy.PolicyCoverageTypes" class="text-danger"></span>
-                                </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <form class="policy-validation" action="/api/Policies" method="post" data-id="" data-response="#response" novalidate>
+                            <partial name="_PolicyPartial" />
+                            <div class="form-group">
+                                <button type="submit" id="CreatePolicy" class="btn btn-primary">Crear</button>
                             </div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label asp-for="Policy.CoveragePercentage"></label>
-                            <input type="range" class="form-control-range" asp-for="Policy.CoveragePercentage" step="0.1" required>
-                            <small id="CoveragePercentage" class="form-text text-center text-muted">
-                                0%
-                            </small>
-                            <span asp-validation-for="Policy.CoveragePercentage" class="text-danger"></span>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                        <div class="table-responsive-sm">
+                            <table id="policies-table" class="table table-sm">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">@Html.DisplayNameFor(model => model.Policy.Name)</th>
+                                        <th scope="col">@Html.DisplayNameFor(model => model.Policy.PolicyCoverageTypes)</th>
+                                        <th scope="col">@Html.DisplayNameFor(model => model.Policy.CoveragePercentage)</th>
+                                        <th scope="col">@Html.DisplayNameFor(model => model.Policy.CoverageMonths)</th>
+                                        <th scope="col">@Html.DisplayNameFor(model => model.Policy.RiskType)</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-sm-6">
-                            <label asp-for="Policy.StartDate" class="control-label"></label>
-                            <input asp-for="Policy.StartDate" class="form-control" required/>
-                            <span asp-validation-for="Policy.StartDate" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label asp-for="Policy.CoverageMonths" class="control-label"></label>
-                            <input asp-for="Policy.CoverageMonths" class="form-control" min="1.0" required/>
-                            <span asp-validation-for="Policy.CoverageMonths" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-sm-6">
-                            <label asp-for="Policy.Price" class="control-label"></label>
-                            <input asp-for="Policy.Price" class="form-control" min="1" required/>
-                            <span asp-validation-for="Policy.Price" class="text-danger"></span>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label asp-for="Policy.RiskType" class="control-label"></label>
-                            <select asp-for="Policy.RiskTypeId" class="custom-select" asp-items="@(new SelectList(Model.RiskTypes, "ID", "Name"))" required>
-                                <option value="">-- Seleccionar --</option>
-                            </select>
-                            <span asp-validation-for="Policy.RiskTypeId" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <button type="submit" id="CreatePolicy" class="btn btn-primary">Crear</button>
-                    </div>
-                </form>
+                </div>
                 <div id="response"></div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Editar Póliza de Seguro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="policy-validation" action="/api/Policies" method="put" data-id="" data-response="#modal-response" novalidate>
+                <div class="modal-body">
+                    <div id="modal-response"></div>
+                    <partial name="_PolicyPartial" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Eliminar Póliza de Seguro</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="delete-form" action="/api/Policies" method="delete" data-id="" data-response="#delete-response">
+                <div class="modal-body">
+                    <p>¿Estás seguro de que quieres eliminar esto?</p>
+                    <div id="delete-response"></div>
+                    <input type="hidden" asp-for="Policy.ID" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
